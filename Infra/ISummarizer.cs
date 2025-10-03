@@ -1,4 +1,4 @@
-namespace SkOfflineCourse.Infra;
+namespace PicPayPA.Infra;
 
 /// <summary>
 /// Abstração para criar resumos de textos. Permite mock em testes sem LLM.

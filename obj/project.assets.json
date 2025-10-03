@@ -932,19 +932,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/danilo.perez/.nuget/packages/": {}
+    "C:\\Users\\mayara.goncalves\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/danilo.perez/projects/invillia/SkOfflineCourse/SkOfflineCourse.csproj",
-      "projectName": "SkOfflineCourse",
-      "projectPath": "/Users/danilo.perez/projects/invillia/SkOfflineCourse/SkOfflineCourse.csproj",
-      "packagesPath": "/Users/danilo.perez/.nuget/packages/",
-      "outputPath": "/Users/danilo.perez/projects/invillia/SkOfflineCourse/obj/",
+      "projectUniqueName": "c:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\PicPayPA.csproj",
+      "projectName": "PicPayPA",
+      "projectPath": "c:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\PicPayPA.csproj",
+      "packagesPath": "C:\\Users\\mayara.goncalves\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/danilo.perez/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\mayara.goncalves\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -994,7 +994,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

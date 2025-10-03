@@ -1,77 +1,108 @@
-# SK Assistant com IA
+# PicPayPA - Agente Financeiro Pessoal
 
-Assistente de linha de comando usando **Microsoft Semantic Kernel** com modelos de linguagem de IA locais. O sistema utiliza modelos como Llama 3.1 para entender comandos em linguagem natural e executar tarefas através de plugins.
+Agente Financeiro Pessoal (PFA) usando **Microsoft Semantic Kernel** com **Google Gemini API**. O sistema utiliza IA para transformar o atendimento do PicPay do nível Reativo (resolver erros) para o nível Proativo e de Consultoria (ajudar o cliente a planejar e economizar).
 
-## Funcionalidades
+## 💡 A Ideia: Agente Financeiro Pessoal (PFA)
 
-- **Gerenciar tarefas com linguagem natural**:
-  - Criar novas tarefas - ex: "Preciso comprar café amanhã"
-  - Listar tarefas pendentes - ex: "Mostre minhas tarefas"
-  - Marcar tarefas como concluídas - ex: "Marquei como concluída a tarefa 2" 
-  - Receber recomendações inteligentes - ex: "O que devo fazer agora?"
+O PFA faz a ponte entre os dados transacionais do cliente e metas financeiras, ajudando a economizar e investir melhor através de:
 
-- **Gerenciar notas com linguagem natural**:
-  - Salvar anotações - ex: "Anote que a reunião foi adiada para sexta"
-  - Listar suas anotações - ex: "Mostrar todas as minhas notas"
-  - Buscar por conteúdo - ex: "Encontre minhas notas sobre reunião"
-  - Gerar resumos automáticos - ex: "Faça um resumo da nota 2"
+- **Análise proativa de gastos**: Entende o perfil financeiro do cliente
+- **Sugestões personalizadas de investimento**: Recomenda produtos adequados ao perfil de risco
+- **Consultoria financeira inteligente**: Usa IA para dar conselhos educativos e práticos
 
-- **Recursos técnicos**:
-  - Integração com modelos de IA locais (como Llama 3.1)
-  - Compreensão de linguagem natural para comandos
-  - Armazenamento persistido em `data/*.json` (criado automaticamente)
-  - Plugins registrados como funções do SK (`TaskPlugin`, `NotesPlugin`)
+## 🏗️ Arquitetura
 
-## Estrutura do projeto
+| Componente | Função |
+|------------|--------|
+| **Gemini API** | O "Consultor". Recebe a intenção do cliente e decide quais ferramentas usar |
+| **Semantic Kernel** | O "Orquestrador". Faz o Function Calling entre a IA e os plugins |
+| **Plugins** | O "Backend". Simulam análise de dados e sugestões financeiras |
 
-```
-Infra/
-  AIIntentRouter.cs        -> Direciona comandos de linguagem natural para funções
-  AISummarizer.cs          -> Implementação de resumo usando IA
-  ISummarizer.cs           -> Interface para resumir textos
-  JsonMemoryStore.cs       -> Persistência de dados em JSON
-Plugins/
-  TaskPlugin.cs            -> Operações de gerenciamento de tarefas
-  NotesPlugin.cs           -> Operações de gerenciamento de notas
-Program.cs                 -> Loop de interação da interface CLI
-```
+## 🔧 Plugins Disponíveis
 
-## Configuração do modelo de IA
+### 1. AnalyzeSpendingPlugin
+Simula a análise do histórico financeiro do cliente:
+- **Parâmetro**: `timeframe` (período a ser analisado)
+- **Retorno**: Detalhes de renda, gastos por categoria e capacidade de investimento
 
-O projeto está configurado para usar o modelo Llama 3.1 (8B) local através de uma API compatível com OpenAI. Por padrão, ele espera encontrar o modelo em `http://localhost:11434/v1/`.
+### 2. InvestmentSuggestionPlugin  
+Sugere investimentos baseados no perfil do cliente:
+- **Parâmetros**: `amount` (valor a investir), `riskTolerance` (baixo/médio/alto)
+- **Retorno**: Recomendações personalizadas de produtos financeiros
 
-Para usar um modelo ou configuração diferente, ajuste as configurações no arquivo `Program.cs`:
+## 🚀 Como usar
 
-```csharp
-kernelBuilder.AddOpenAIChatCompletion(
-    modelId: "llama3.1:8b",
-    apiKey: "apiKey",  // Pode não ser necessário para modelos locais
-    httpClient: new HttpClient { 
-        BaseAddress = new Uri("http://localhost:11434/v1/")
-    });
-```
+### 1. Obter API Key do Gemini
+1. Acesse [Google AI Studio](https://ai.google.dev/)
+2. Crie uma conta e gere sua API Key
+3. Guarde a chave com segurança
 
-## Como executar
+### 2. Configurar e Executar
 
+**Opção 1 - Script Automático (Windows):**
 ```bash
-# Compilar o projeto
-dotnet build
+# Execute o script de configuração
+setup.bat
+```
 
-# Executar o assistente
+**Opção 2 - Manual:**
+```bash
+# Configure a API Key (substitua pela sua chave)
+set GEMINI_API_KEY=sua_chave_aqui
+
+# Compile e execute
+dotnet build
 dotnet run
 ```
 
-## Requisitos
+**⚠️ SEGURANÇA:**
+- A API Key fica no backend (variável de ambiente)
+- Cliente nunca vê ou insere a API Key
+- Em produção, use Azure Key Vault ou similar
+
+### 3. Exemplos de interação
+- **"Quero começar a investir R$ 500"**
+- **"Como posso economizar mais dinheiro?"**  
+- **"Tenho R$ 2000 para investir, o que você sugere?"**
+- **"Preciso de ajuda para organizar minhas finanças"**
+
+## 📊 Fluxo de Exemplo
+
+**Cliente**: "Gostaria de começar a investir, mas não sei por onde começar. Tenho cerca de R$ 500 sobrando no fim do mês."
+
+1. **IA analisa** a intenção e decide usar as ferramentas
+2. **Plugin 1** analisa os gastos: "Renda: R$ 4000. Capacidade real: R$ 700"
+3. **Plugin 2** sugere investimento: "CDB de liquidez diária é ideal para iniciantes"
+4. **IA responde**: "Que ótimo que você quer começar! Analisei seus gastos e você tem uma folga confortável. Como é seu primeiro investimento, sugiro o CDB de Liquidez Diária no PicPay..."
+
+## 🛠️ Requisitos
 
 - .NET 8.0 ou superior
-- Um modelo de linguagem compatível com a API OpenAI
-  - Pode ser Llama 3.1 ou outro modelo executado localmente
-  - Recomendado: Ollama, llama.cpp ou outra solução que disponibilize uma API REST
+- API Key do Google Gemini
+- Conexão com internet
 
-## Interação por linguagem natural
+## 📁 Estrutura do Projeto
 
-O assistente é projetado para entender comandos em linguagem natural. Não é necessário usar comandos específicos - experimente falar naturalmente, como você falaria com um assistente real.
+```
+PicPayPA/
+├── Infra/
+│   ├── GeminiChatService.cs     -> Integração com Gemini API
+│   ├── ISummarizer.cs           -> Interface para resumos
+│   └── JsonMemoryStore.cs       -> Persistência de dados
+├── Plugins/
+│   ├── AnalyzeSpendingPlugin.cs -> Análise de gastos
+│   └── InvestmentSuggestionPlugin.cs -> Sugestões de investimento
+├── Program.cs                   -> Interface CLI do PFA
+└── README.md                    -> Este arquivo
+```
 
-## Licença
+## 🎯 Objetivo
 
-Uso educacional/demonstração.
+Demonstrar como o **Semantic Kernel** pode orquestrar um agente de IA que:
+- Usa **Function Calling** para executar código específico
+- Combina **análise de dados** com **inteligência artificial**
+- Oferece **consultoria financeira proativa** e personalizada
+
+## 📄 Licença
+
+Projeto educacional/demonstração para o PicPay.

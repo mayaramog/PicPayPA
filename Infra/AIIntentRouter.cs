@@ -1,7 +1,7 @@
 using Microsoft.SemanticKernel;
 using System.Text.Json;
 
-namespace SkOfflineCourse.Infra;
+namespace PicPayPA.Infra;
 
 public class AIIntentRouter
 {

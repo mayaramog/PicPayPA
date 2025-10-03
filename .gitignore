@@ -26,6 +26,7 @@ _ReSharper*/
 *.idea/
 *.DS_Store
 *.env
+appsettings.json
 *.localhistory/
 *.tmp
 *.bak
