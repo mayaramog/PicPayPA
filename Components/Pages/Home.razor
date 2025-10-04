@@ -1,0 +1,141 @@
+@page "/"
+@using PicPayPA.Services
+@inject ChatService ChatService
+@inject IJSRuntime JSRuntime
+
+<div class="chat-container">
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="d-flex align-items-center">
+            <div class="picpay-logo">
+                <i class="fas fa-coins text-white"></i>
+            </div>
+            <div class="ms-3">
+                <h4 class="mb-0 text-white">PicPay Agente Financeiro</h4>
+                <small class="text-white-50">Seu consultor financeiro pessoal</small>
+            </div>
+        </div>
+        <button class="btn btn-outline-light btn-sm" @onclick="ClearChat">
+            <i class="fas fa-trash"></i> Limpar
+        </button>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="messagesContainer">
+        @foreach (var message in ChatService.Messages)
+        {
+            <div class="message @(message.IsUser ? "user-message" : "bot-message")">
+                <div class="message-content">
+                    <div class="message-avatar">
+                        @if (message.IsUser)
+                        {
+                            <i class="fas fa-user"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-robot"></i>
+                        }
+                    </div>
+                    <div class="message-text">
+                        @((MarkupString)FormatMessage(message.Text))
+                        <div class="message-time">
+                            @message.Timestamp.ToString("HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (isProcessing)
+        {
+            <div class="message bot-message">
+                <div class="message-content">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-text">
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input">
+        <div class="input-group">
+            <input type="text" class="form-control" @bind="currentMessage" @onkeypress="HandleKeyPress" 
+                   placeholder="Digite sua mensagem..." disabled="@isProcessing" />
+            <button class="btn btn-picpay" @onclick="SendMessage" disabled="@(isProcessing || string.IsNullOrWhiteSpace(currentMessage))">
+                @if (isProcessing)
+                {
+                    <i class="fas fa-spinner fa-spin"></i>
+                }
+                else
+                {
+                    <i class="fas fa-paper-plane"></i>
+                }
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string currentMessage = "";
+    private bool isProcessing = false;
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(currentMessage) || isProcessing)
+            return;
+
+        var message = currentMessage;
+        currentMessage = "";
+        isProcessing = true;
+
+        StateHasChanged();
+
+        try
+        {
+            await ChatService.SendMessageAsync(message);
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleKeyPress(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    private void ClearChat()
+    {
+        ChatService.ClearChat();
+        StateHasChanged();
+    }
+
+    private string FormatMessage(string message)
+    {
+        // Formatação básica para melhorar a visualização
+        message = message.Replace("\n", "<br>");
+        
+        // Destaca valores monetários
+        message = System.Text.RegularExpressions.Regex.Replace(
+            message, 
+            @"R\$\s*(\d{1,3}(?:\.\d{3})*(?:,\d{2})?|\d+(?:,\d{2})?)",
+            "<strong class='money-highlight'>R$ $1</strong>"
+        );
+
+        return message;
+    }
+}
