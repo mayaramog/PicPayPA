@@ -932,19 +932,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\matheus.gon\\.nuget\\packages\\": {}
+    "C:\\Users\\mayara.goncalves\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\matheus.gon\\Documents\\github\\PicPayPA\\PicPayPA.csproj",
+      "projectUniqueName": "C:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\PicPayPA.csproj",
       "projectName": "PicPayPA",
-      "projectPath": "C:\\Users\\matheus.gon\\Documents\\github\\PicPayPA\\PicPayPA.csproj",
-      "packagesPath": "C:\\Users\\matheus.gon\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\matheus.gon\\Documents\\github\\PicPayPA\\obj\\",
+      "projectPath": "C:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\PicPayPA.csproj",
+      "packagesPath": "C:\\Users\\mayara.goncalves\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mayara.goncalves\\Documents\\GitHub\\PicPayPA\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\matheus.gon\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\mayara.goncalves\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

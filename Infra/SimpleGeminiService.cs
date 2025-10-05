@@ -21,6 +21,17 @@ public class SimpleGeminiService
     {
         try
         {
+            // Verificar se a pergunta é sobre finanças
+            var financialKeywords = new[] { "investir", "dinheiro", "gasto", "economia", "poupança", "cartão", "pix", "saldo", "conta", "financeiro", "real", "reais", "R$", "compra", "venda", "pagamento", "transferência", "empréstimo", "financiamento", "juros", "rendimento" };
+            
+            var isFinancialQuestion = financialKeywords.Any(keyword => 
+                userInput.ToLower().Contains(keyword.ToLower()));
+            
+            if (!isFinancialQuestion)
+            {
+                return "Desculpe, sou um consultor financeiro do PicPay e só posso ajudar com questões relacionadas a finanças, investimentos, gastos e produtos financeiros. Como posso ajudá-lo com suas finanças hoje? 💰";
+            }
+
             // 1. Executar plugins automaticamente
             var clientId = "12345678901";
             var accountData = await _kernel.InvokeAsync("MockData", "GetAccountBalance", 
@@ -51,7 +62,7 @@ public class SimpleGeminiService
 
             // 3. Prompt para o Gemini
             var prompt = $@"
-Você é um consultor financeiro do PicPay. Responda de forma amigável e educativa.
+Você é um consultor financeiro do PicPay. IMPORTANTE: Responda APENAS sobre tópicos financeiros (investimentos, gastos, economia, produtos bancários).
 
 Cliente perguntou: {userInput}
 
@@ -60,7 +71,7 @@ Dados do cliente:
 - Análise de gastos: {spendingAnalysis}  
 - Sugestão de investimento: {investmentSuggestion}
 
-Responda como um consultor experiente, usando esses dados para dar conselhos personalizados.";
+Responda como um consultor experiente, usando esses dados para dar conselhos personalizados sobre finanças.";
 
             var request = new
             {
@@ -80,7 +91,7 @@ Responda como um consultor experiente, usando esses dados para dar conselhos per
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={_apiKey}", 
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={_apiKey}", 
                 content);
             
             var responseContent = await response.Content.ReadAsStringAsync();
